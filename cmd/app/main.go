@@ -66,4 +66,12 @@ func main() {
 	stealth.ScrollHumanLike(page, 1200)
 	log.Debug("Human-like scrolling executed")
 
+	// Demonstrate human-like typing (no real submission)
+	page.MustNavigate("https://example.com")
+	stealth.Think(1000, 2000)
+
+	body := page.MustElement("body")
+	stealth.TypeHumanLike(body, "Human-like typing simulation test")
+	log.Debug("Human-like typing simulation executed")
+
 }
