@@ -5,6 +5,7 @@ import (
 
 	"github.com/joho/godotenv"
 
+	"github.com/Hatsunmikk/linkedin-automation/internal/browser"
 	"github.com/Hatsunmikk/linkedin-automation/internal/config"
 	"github.com/Hatsunmikk/linkedin-automation/internal/logger"
 )
@@ -28,4 +29,15 @@ func main() {
 	// used and validated at startup.
 	log.Info("Configuration loaded successfully")
 	log.Debug("Daily connection limit: " + strconv.Itoa(cfg.DailyConnectionLimit))
+
+	//Initialize the browser with headless configuration
+	br, err := browser.New(cfg.Headless, log)
+	if err != nil {
+		log.Error("Failed to launch browser")
+		return
+	}
+	defer br.Close()
+
+	log.Info("Browser ready for automation")
+
 }
