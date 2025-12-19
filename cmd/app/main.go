@@ -58,4 +58,8 @@ func main() {
 	stealth.Think(800, 1800)
 	log.Debug("Human-like think time applied")
 
+	// Demonstrate human-like mouse movement
+	stealth.MoveMouseHumanLike(page, 100, 100, 600, 400)
+	log.Debug("Human-like mouse movement executed")
+
 }
