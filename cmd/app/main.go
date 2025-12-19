@@ -74,4 +74,9 @@ func main() {
 	stealth.TypeHumanLike(body, "Human-like typing simulation test")
 	log.Debug("Human-like typing simulation executed")
 
+	// Demonstrate human-like hover behavior
+	el := page.MustElement("h1")
+	stealth.HoverHumanLike(page, el)
+	log.Debug("Human-like hover behavior executed")
+
 }
