@@ -36,6 +36,12 @@ func main() {
 	// Initialize rate limiter (human-like pacing)
 	limiter := stealth.NewRateLimiter(3, 10*time.Second)
 
+	// Enforce activity scheduling (business hours only)
+	if !stealth.IsWithinBusinessHours(9, 18) {
+		log.Warn("Outside business hours. Automation will not run.")
+		return
+	}
+
 	//Initialize the browser with headless configuration
 	br, err := browser.New(cfg.Headless, log)
 	if err != nil {
