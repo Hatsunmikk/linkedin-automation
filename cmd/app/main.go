@@ -5,6 +5,8 @@ import (
 
 	"github.com/joho/godotenv"
 
+	"time"
+
 	"github.com/Hatsunmikk/linkedin-automation/internal/browser"
 	"github.com/Hatsunmikk/linkedin-automation/internal/config"
 	"github.com/Hatsunmikk/linkedin-automation/internal/logger"
@@ -30,6 +32,9 @@ func main() {
 	// used and validated at startup.
 	log.Info("Configuration loaded successfully")
 	log.Debug("Daily connection limit: " + strconv.Itoa(cfg.DailyConnectionLimit))
+
+	// Initialize rate limiter (human-like pacing)
+	limiter := stealth.NewRateLimiter(3, 10*time.Second)
 
 	//Initialize the browser with headless configuration
 	br, err := browser.New(cfg.Headless, log)
@@ -59,10 +64,12 @@ func main() {
 	log.Debug("Human-like think time applied")
 
 	// Demonstrate human-like mouse movement
+	limiter.Allow()
 	stealth.MoveMouseHumanLike(page, 100, 100, 600, 400)
 	log.Debug("Human-like mouse movement executed")
 
 	// Demonstrate natural scrolling behavior
+	limiter.Allow()
 	stealth.ScrollHumanLike(page, 1200)
 	log.Debug("Human-like scrolling executed")
 
@@ -71,6 +78,7 @@ func main() {
 	stealth.Think(1000, 2000)
 
 	body := page.MustElement("body")
+	limiter.Allow()
 	stealth.TypeHumanLike(body, "Human-like typing simulation test")
 	log.Debug("Human-like typing simulation executed")
 
