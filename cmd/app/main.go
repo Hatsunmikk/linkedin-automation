@@ -54,4 +54,8 @@ func main() {
 
 	log.Info("Stealth fingerprint masking applied")
 
+	// Simulate human pause before further actions
+	stealth.Think(800, 1800)
+	log.Debug("Human-like think time applied")
+
 }
