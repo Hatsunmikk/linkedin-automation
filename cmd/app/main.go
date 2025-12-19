@@ -8,6 +8,7 @@ import (
 	"github.com/Hatsunmikk/linkedin-automation/internal/browser"
 	"github.com/Hatsunmikk/linkedin-automation/internal/config"
 	"github.com/Hatsunmikk/linkedin-automation/internal/logger"
+	"github.com/Hatsunmikk/linkedin-automation/internal/stealth"
 )
 
 // main bootstraps the application by loading configuration,
@@ -39,5 +40,18 @@ func main() {
 	defer br.Close()
 
 	log.Info("Browser ready for automation")
+
+	page, err := br.NewPage()
+	if err != nil {
+		log.Error("Failed to create browser page")
+		return
+	}
+
+	if err := stealth.ApplyFingerprintMask(page); err != nil {
+		log.Error("Failed to apply fingerprint masking")
+		return
+	}
+
+	log.Info("Stealth fingerprint masking applied")
 
 }

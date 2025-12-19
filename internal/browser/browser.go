@@ -20,6 +20,9 @@ type Browser struct {
 // (visible browser) and automated execution.
 func New(headless bool, log *logger.Logger) (*Browser, error) {
 	launch := launcher.New().
+		//Disabling leakless to void Windows Defender false positives
+		//This is a known issue in Windows environments
+		Leakless(false).
 		// These flags improve stability on Windows environments
 		// and reduce common Chromium startup failures.
 		Set("disable-gpu", "true").
@@ -52,6 +55,12 @@ func New(headless bool, log *logger.Logger) (*Browser, error) {
 		rodBrowser: rb,
 		log:        log,
 	}, nil
+}
+
+// NewPage creates a new browser tab for automation.
+func (b *Browser) NewPage() (*rod.Page, error) {
+	page := b.rodBrowser.MustPage()
+	return page, nil
 }
 
 // Close shuts down the borwser instance gracefully
