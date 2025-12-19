@@ -62,4 +62,8 @@ func main() {
 	stealth.MoveMouseHumanLike(page, 100, 100, 600, 400)
 	log.Debug("Human-like mouse movement executed")
 
+	// Demonstrate natural scrolling behavior
+	stealth.ScrollHumanLike(page, 1200)
+	log.Debug("Human-like scrolling executed")
+
 }
