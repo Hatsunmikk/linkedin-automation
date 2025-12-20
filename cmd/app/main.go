@@ -10,6 +10,7 @@ import (
 	"github.com/Hatsunmikk/linkedin-automation/internal/auth"
 	"github.com/Hatsunmikk/linkedin-automation/internal/browser"
 	"github.com/Hatsunmikk/linkedin-automation/internal/config"
+	"github.com/Hatsunmikk/linkedin-automation/internal/connections"
 	"github.com/Hatsunmikk/linkedin-automation/internal/logger"
 	"github.com/Hatsunmikk/linkedin-automation/internal/search"
 	"github.com/Hatsunmikk/linkedin-automation/internal/state"
@@ -113,6 +114,27 @@ func main() {
 
 	for _, r := range results {
 		log.Debug("Discovered profile: " + r.ProfileURL)
+	}
+
+	// ---- Connection Requests (PoC-safe) ----
+	connManager := connections.New(cfg.DailyConnectionLimit, appState)
+
+	for _, r := range results {
+		if !connManager.CanSend(r.ProfileURL) {
+			log.Debug("Skipping already-contacted profile: " + r.ProfileURL)
+			continue
+		}
+
+		note := connections.BuildPersonalizedNote("there", "SubSpace")
+
+		req, err := connManager.Send(r.ProfileURL, note)
+		if err != nil {
+			log.Warn("Could not send request: " + err.Error())
+			continue
+		}
+
+		log.Info("Simulated connection request sent to: " + req.ProfileURL)
+		log.Debug("Note content: " + req.Note)
 	}
 
 	if err := stealth.ApplyFingerprintMask(page); err != nil {
