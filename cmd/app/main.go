@@ -12,6 +12,7 @@ import (
 	"github.com/Hatsunmikk/linkedin-automation/internal/config"
 	"github.com/Hatsunmikk/linkedin-automation/internal/connections"
 	"github.com/Hatsunmikk/linkedin-automation/internal/logger"
+	"github.com/Hatsunmikk/linkedin-automation/internal/messaging"
 	"github.com/Hatsunmikk/linkedin-automation/internal/search"
 	"github.com/Hatsunmikk/linkedin-automation/internal/state"
 	"github.com/Hatsunmikk/linkedin-automation/internal/stealth"
@@ -135,6 +136,32 @@ func main() {
 
 		log.Info("Simulated connection request sent to: " + req.ProfileURL)
 		log.Debug("Note content: " + req.Note)
+	}
+
+	// ---- Messaging System (PoC-safe) ----
+	msgManager := messaging.New(appState)
+
+	for _, r := range results {
+		if !msgManager.IsConnectionAccepted(r.ProfileURL) {
+			log.Debug("Connection not accepted yet: " + r.ProfileURL)
+			continue
+		}
+
+		if !msgManager.CanSendMessage(r.ProfileURL) {
+			log.Debug("Message already sent to: " + r.ProfileURL)
+			continue
+		}
+
+		content := messaging.BuildTemplate("there", "SubSpace")
+
+		msg, err := msgManager.SendFollowUp(r.ProfileURL, content)
+		if err != nil {
+			log.Warn("Could not send follow-up: " + err.Error())
+			continue
+		}
+
+		log.Info("Simulated follow-up message sent to: " + msg.ProfileURL)
+		log.Debug("Message content: " + msg.Content)
 	}
 
 	if err := stealth.ApplyFingerprintMask(page); err != nil {
