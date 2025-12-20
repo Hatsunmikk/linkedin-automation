@@ -7,6 +7,7 @@ import (
 
 	"time"
 
+	"github.com/Hatsunmikk/linkedin-automation/internal/auth"
 	"github.com/Hatsunmikk/linkedin-automation/internal/browser"
 	"github.com/Hatsunmikk/linkedin-automation/internal/config"
 	"github.com/Hatsunmikk/linkedin-automation/internal/logger"
@@ -57,6 +58,24 @@ func main() {
 		log.Error("Failed to create browser page")
 		return
 	}
+
+	authResult, err := auth.Login(page)
+	if err != nil {
+		log.Error("Authentication error: " + err.Error())
+		return
+	}
+
+	if authResult.CheckpointHit {
+		log.Warn("Security checkpoint detected. Aborting automation.")
+		return
+	}
+
+	if !authResult.Success {
+		log.Warn("Login failed: " + authResult.FailureReason)
+		return
+	}
+
+	log.Info("Authentication successful")
 
 	if err := stealth.ApplyFingerprintMask(page); err != nil {
 		log.Error("Failed to apply fingerprint masking")
