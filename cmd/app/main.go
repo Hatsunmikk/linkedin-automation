@@ -11,6 +11,7 @@ import (
 	"github.com/Hatsunmikk/linkedin-automation/internal/browser"
 	"github.com/Hatsunmikk/linkedin-automation/internal/config"
 	"github.com/Hatsunmikk/linkedin-automation/internal/logger"
+	"github.com/Hatsunmikk/linkedin-automation/internal/search"
 	"github.com/Hatsunmikk/linkedin-automation/internal/state"
 	"github.com/Hatsunmikk/linkedin-automation/internal/stealth"
 )
@@ -91,6 +92,28 @@ func main() {
 	}
 
 	log.Info("Authentication successful")
+
+	// ---- Search & Targeting (PoC-safe) ----
+	engine := search.New()
+
+	query := search.Query{
+		JobTitle: "Software Engineer",
+		Company:  "SubSpace",
+		Location: "Bangalore",
+		Keywords: []string{"Go", "Backend"},
+	}
+
+	results, err := engine.Search(page, query, 2)
+	if err != nil {
+		log.Error("Search failed: " + err.Error())
+		return
+	}
+
+	log.Info("Search completed. Profiles found: " + strconv.Itoa(len(results)))
+
+	for _, r := range results {
+		log.Debug("Discovered profile: " + r.ProfileURL)
+	}
 
 	if err := stealth.ApplyFingerprintMask(page); err != nil {
 		log.Error("Failed to apply fingerprint masking")
