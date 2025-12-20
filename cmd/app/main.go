@@ -11,6 +11,7 @@ import (
 	"github.com/Hatsunmikk/linkedin-automation/internal/browser"
 	"github.com/Hatsunmikk/linkedin-automation/internal/config"
 	"github.com/Hatsunmikk/linkedin-automation/internal/logger"
+	"github.com/Hatsunmikk/linkedin-automation/internal/state"
 	"github.com/Hatsunmikk/linkedin-automation/internal/stealth"
 )
 
@@ -22,6 +23,20 @@ func main() {
 	_ = godotenv.Load()
 
 	log := logger.New(true)
+
+	statePath := "state.json"
+
+	appState, err := state.Load(statePath)
+	if err != nil {
+		log.Error("Failed to load state: " + err.Error())
+		return
+	}
+
+	defer func() {
+		if err := appState.Save(statePath); err != nil {
+			log.Error("Failed to save state: " + err.Error())
+		}
+	}()
 
 	cfg, err := config.Load()
 	if err != nil {
@@ -111,5 +126,21 @@ func main() {
 	el := page.MustElement("h1")
 	stealth.HoverHumanLike(page, el)
 	log.Debug("Human-like hover behavior executed")
+
+	// ---- State persistence demo (PoC-safe) ----
+	// This simulates tracking of automation actions
+	// without interacting with real LinkedIn profiles.
+
+	testProfile := "https://linkedin.com/in/example-profile"
+
+	if _, exists := appState.SentRequests[testProfile]; !exists {
+		log.Info("Recording sent connection request")
+		appState.MarkRequestSent(testProfile)
+	}
+
+	if _, exists := appState.SentMessages[testProfile]; !exists {
+		log.Info("Recording sent message")
+		appState.MarkMessageSent(testProfile)
+	}
 
 }
