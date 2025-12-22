@@ -7,6 +7,11 @@ This project is a technical proof-of-concept created solely for evaluation and l
 Automating LinkedIn violates LinkedIn’s Terms of Service.
 This tool must never be used on real LinkedIn accounts or deployed in production.
 
+## Demo Video
+
+Watch the full walkthrough here:  
+https://youtu.be/mCVrr0nB8hA
+
 # Project Overview
 
 This repository contains a Go-based browser automation proof-of-concept built using the Rod library.
