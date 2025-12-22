@@ -2,7 +2,7 @@
 
 LinkedIn Automation – Go (Proof of Concept)
 
-Important Disclaimer – Educational Use Only
+Important Disclaimer – Educational Use Only.
 This project is a technical proof-of-concept created solely for evaluation and learning purposes.
 Automating LinkedIn violates LinkedIn’s Terms of Service.
 This tool must never be used on real LinkedIn accounts or deployed in production.

@@ -10,7 +10,7 @@ import (
 )
 
 // MoveMouseHumanLike moves the mouse cursor along
-// a Bézier curve to simulate natural human motion.
+// a Bezier curve to simulate natural human motion.
 func MoveMouseHumanLike(page *rod.Page, startX, startY, endX, endY float64) {
 	// Random control points for curve
 	ctrlX := (startX+endX)/2 + rand.Float64()*100 - 50
@@ -21,7 +21,7 @@ func MoveMouseHumanLike(page *rod.Page, startX, startY, endX, endY float64) {
 	for i := 0; i <= steps; i++ {
 		t := float64(i) / float64(steps)
 
-		// Quadratic Bézier curve formula
+		// Quadratic Bezier curve formula
 		x := math.Pow(1-t, 2)*startX +
 			2*(1-t)*t*ctrlX +
 			math.Pow(t, 2)*endX

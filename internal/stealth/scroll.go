@@ -19,7 +19,6 @@ func ScrollHumanLike(page *rod.Page, totalScroll int) {
 			step = scrollRemaining
 		}
 
-		// Rod v0.116 expects (dx, dy, steps)
 		page.Mouse.Scroll(0, float64(step), 1)
 		scrollRemaining -= step
 

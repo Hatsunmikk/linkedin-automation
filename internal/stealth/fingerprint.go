@@ -19,7 +19,7 @@ func ApplyFingerprintMask(page *rod.Page) error {
 	page.MustSetViewport(width, height, 1, false)
 
 	// Inject stealth script on every new document.
-	// This is the correct Rod v0.116 way to mask webdriver.
+
 	page.MustEvalOnNewDocument(`
 		Object.defineProperty(Navigator.prototype, 'webdriver', {
 			get: () => undefined,
